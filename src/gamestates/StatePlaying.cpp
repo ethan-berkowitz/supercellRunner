@@ -5,6 +5,8 @@
 #include <memory>
 #include <iostream>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <algorithm>
+#include <functional>
 
 StatePlaying::StatePlaying(StateStack& stateStack)
     : m_stateStack(stateStack)
