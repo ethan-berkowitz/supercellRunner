@@ -65,7 +65,12 @@ Upload your work to Google Drive, Dropbox (or some other service), and complete 
 
 ## Your Game's Instructions
 
-Please include any instructions to your game here.
+Controls:
+Press 'space' to jump
+Press 'enter' to shoot
+
+Objective:
+Survive for as long as possible by jumping over enemies or shooting them in the head!
 
 ## Troubleshooting
 
