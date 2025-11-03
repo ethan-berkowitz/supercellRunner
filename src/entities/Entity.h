@@ -27,6 +27,7 @@ public:
     void setHealth(int health) { m_health = health; }
 
     std::unique_ptr<sf::Sprite> m_pSprite;
+    bool isHit = false;
 
 protected:
     sf::Vector2f m_position;

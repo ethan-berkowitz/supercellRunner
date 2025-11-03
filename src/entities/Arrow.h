@@ -20,5 +20,6 @@ public:
     void render(sf::RenderTarget& target) const override;
 
     float arrowMoveSpeed = 800;
-    float startingY;
+    float startingX;
+    float arrowMaxDistance = 500;
 };

@@ -39,7 +39,6 @@ void StatePlaying::update(float dt)
         float startingY = 752;
         float variationY = randomInt * 48;
         pEnemy->setPosition(sf::Vector2f(1000, startingY - variationY));
-        //pEnemy->setPosition(sf::Vector2f(1000, startingY));
 
         if (pEnemy->init())
             m_enemies.push_back(std::move(pEnemy));
@@ -49,9 +48,9 @@ void StatePlaying::update(float dt)
     m_timeUntilShootArrow -= dt;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) && m_timeUntilShootArrow < 0.0f) {
         m_timeUntilShootArrow = arrowShootInterval;
-        std::cout << "pressed enter\n";
         std::unique_ptr<Arrow> pArrow = std::make_unique<Arrow>();
         pArrow->setPosition({m_pPlayer->getPosition().x + 48, m_pPlayer->getPosition().y});
+        pArrow->startingX = m_pPlayer->getPosition().x;
         if (pArrow->init())
             m_arrows.push_back(std::move(pArrow));
     }
@@ -73,15 +72,48 @@ void StatePlaying::update(float dt)
         pArrow->update(dt);
     }
 
-    // Detect collisions
+    // Detect player and enemy collisions
     bool playerDied = false;
-    for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
-    {
+    for (const std::unique_ptr<Enemy>& pEnemy : m_enemies) {
         sf::FloatRect playerBounds = m_pPlayer->m_pSprite->getGlobalBounds();
         sf::FloatRect enemyBounds = pEnemy->m_pSprite->getGlobalBounds();
         if (const std::optional intersection = playerBounds.findIntersection(enemyBounds)) {
-            playerDied = true;
+            //playerDied = true;
             break;
+        }
+    }
+
+    // Detect arrow and enemy collisions
+    for (const std::unique_ptr<Enemy>& pEnemy : m_enemies) {
+        for (const std::unique_ptr<Arrow>& pArrow : m_arrows) {
+            //sf::FloatRect enemyBounds = pEnemy->m_pSprite->getGlobalBounds();
+            sf::FloatRect arrowBounds = pArrow->m_pSprite->getGlobalBounds();
+            sf::FloatRect enemyBounds(pEnemy->getPosition(), {48.f, 48.f});
+            if (const std::optional intersection = arrowBounds.findIntersection(enemyBounds)) {
+                pEnemy->isHit = true;
+                pArrow->isHit = true;
+            }
+        }
+    }
+
+    // Clean up entity vectors on death or offscreen
+
+    for (int i = 0; i < m_enemies.size();) {
+        if (m_enemies[i]->isHit || m_enemies[i]->getPosition().x < -48) {
+            m_enemies.erase(m_enemies.begin() + i);
+        }
+        else {
+            ++i;
+        }
+    }
+
+    for (int i = 0; i < m_arrows.size();) {
+        if (m_arrows[i]->isHit
+        || m_arrows[i]->getPosition().x > m_arrows[i]->startingX + m_arrows[i]->arrowMaxDistance) {
+            m_arrows.erase(m_arrows.begin() + i);
+        }
+        else {
+            ++i;
         }
     }
 
