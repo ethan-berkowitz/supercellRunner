@@ -3,6 +3,7 @@
 #include "IState.h"
 #include "entities/Player.h"
 #include "entities/Enemy.h"
+#include "entities/Arrow.h"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -20,12 +21,17 @@ public:
 
 private:
     // Set enemy spawn rate
-    static constexpr const float enemySpawnInterval = 2.0f;
+    static constexpr const float enemySpawnInterval = 1.5f;
     float m_timeUntilEnemySpawn = enemySpawnInterval;
+
+    // Set minimum time between arrow shots
+    static constexpr const float arrowShootInterval = 0.2f;
+    float m_timeUntilShootArrow = 0.0f;
 
     StateStack& m_stateStack;
     std::unique_ptr<Player> m_pPlayer;
     std::vector<std::unique_ptr<Enemy>> m_enemies;
+    std::vector<std::unique_ptr<Arrow>> m_arrows;
     sf::RectangleShape m_ground;
     bool m_hasPauseKeyBeenReleased = true;
 

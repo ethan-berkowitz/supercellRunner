@@ -22,7 +22,7 @@ bool StatePlaying::init()
     if (!m_pPlayer || !m_pPlayer->init())
         return false;
 
-    m_pPlayer->setPosition(sf::Vector2f(300, 752));
+    m_pPlayer->setPosition(sf::Vector2f(200, 752));
 
     return true;
 }
@@ -45,6 +45,17 @@ void StatePlaying::update(float dt)
             m_enemies.push_back(std::move(pEnemy));
     }
 
+    // Shoot arrow with enter key
+    m_timeUntilShootArrow -= dt;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) && m_timeUntilShootArrow < 0.0f) {
+        m_timeUntilShootArrow = arrowShootInterval;
+        std::cout << "pressed enter\n";
+        std::unique_ptr<Arrow> pArrow = std::make_unique<Arrow>();
+        pArrow->setPosition({m_pPlayer->getPosition().x + 48, m_pPlayer->getPosition().y});
+        if (pArrow->init())
+            m_arrows.push_back(std::move(pArrow));
+    }
+
     // Pause with escape key
     bool isPauseKeyPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
     m_hasPauseKeyBeenReleased |= !isPauseKeyPressed;
@@ -53,10 +64,13 @@ void StatePlaying::update(float dt)
         m_stateStack.push<StatePaused>();
     }
 
-    // Update player
+    // Update player and enemy
     m_pPlayer->update(dt);
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies){
         pEnemy->update(dt);
+    }
+    for (const std::unique_ptr<Arrow>& pArrow : m_arrows){
+        pArrow->update(dt);
     }
 
     // Detect collisions
@@ -81,6 +95,8 @@ void StatePlaying::render(sf::RenderTarget& target) const
     // Draw order
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
         pEnemy->render(target);
+    for (const std::unique_ptr<Arrow>& pArrow : m_arrows)
+        pArrow->render(target);
     m_pPlayer->render(target);
     target.draw(m_ground);
 }

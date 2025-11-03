@@ -8,17 +8,17 @@
 
 namespace sf { class Sprite; }
 
-class Enemy final : public Entity {
+class Arrow final : public Entity {
 public:
     static constexpr float collisionRadius = 24.0f;
 
-    Enemy() = default;
-    virtual ~Enemy() = default;
+    Arrow() = default;
+    virtual ~Arrow() = default;
     
     bool init() override;
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
 
-    float enemyMoveSpeed = 300;
+    float arrowMoveSpeed = 800;
     float startingY;
 };
