@@ -37,6 +37,7 @@ public:
 
     bool playerDied = false;
     bool scoreSaved = false;
+    bool keyPressed = false;
     
 
 private:

@@ -128,7 +128,9 @@ void StatePlaying::update(float dt)
 
     // Shoot arrow with enter key
     m_timeUntilShootArrow -= dt;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) && m_timeUntilShootArrow < 0.0f) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter) && m_timeUntilShootArrow < 0.0f
+        && !keyPressed) {
+        keyPressed = true;
         m_timeUntilShootArrow = arrowShootInterval;
         std::unique_ptr<Arrow> pArrow = std::make_unique<Arrow>();
         pArrow->setPosition({m_pPlayer->getPosition().x + 48, m_pPlayer->getPosition().y});
@@ -136,6 +138,10 @@ void StatePlaying::update(float dt)
         if (pArrow->init())
             m_arrows.push_back(std::move(pArrow));
     }
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
+        keyPressed = false;
+    }
+
 
     // Pause with escape key
     bool isPauseKeyPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
