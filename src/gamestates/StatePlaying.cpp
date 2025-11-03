@@ -148,7 +148,6 @@ void StatePlaying::update(float dt)
         keyPressed = false;
     }
 
-
     // Pause with escape key
     bool isPauseKeyPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
     m_hasPauseKeyBeenReleased |= !isPauseKeyPressed;
@@ -250,13 +249,18 @@ void StatePlaying::render(sf::RenderTarget& target) const
 
     // Draw controls
     int totalMs = static_cast<int>(elapsed.asMilliseconds());
-    if (totalMs < 3000) {
+    if (totalMs < 3000 && !playerDied) {
         m_pScoreText->setFillColor(sf::Color::White);
         m_pScoreText->setPosition({420, 300});
         m_pScoreText->setString("JUMP - <space>");
         target.draw(*m_pScoreText);
-        m_pScoreText->setPosition({420, 332});
+
+        m_pScoreText->setPosition({420, 336});
         m_pScoreText->setString("SHOOT - <enter>");
+        target.draw(*m_pScoreText);
+
+        m_pScoreText->setPosition({320, 372});
+        m_pScoreText->setString("(shoot the enemies in the head)");
         target.draw(*m_pScoreText);
     }
 
