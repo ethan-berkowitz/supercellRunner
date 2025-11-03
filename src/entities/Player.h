@@ -22,7 +22,7 @@ public:
 
     bool m_isJumping = false;
     float velocityY = 0.f;
-    const float jumpStrength = -1100.f;
+    const float jumpStrength = -1300.f;
     const float gravity = 4000.f;
     float startingY = 752;
 };

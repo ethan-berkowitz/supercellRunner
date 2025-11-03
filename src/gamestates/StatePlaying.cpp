@@ -94,6 +94,8 @@ void StatePlaying::update(float dt)
             m_pPlayer->setPosition(sf::Vector2f(200, 752));
             playerDied = false;
             scoreSaved = false;
+            enemyMoveSpeed = startingEnemyMoveSpeed;
+            enemySpawnInterval = startingEnemySpawningInterval;
         }
         return;
     }
@@ -104,13 +106,24 @@ void StatePlaying::update(float dt)
         m_timeUntilEnemySpawn = enemySpawnInterval;
         std::unique_ptr<Enemy> pEnemy = std::make_unique<Enemy>();
         // Set spawn position of enemy
-        float randomInt = std::rand() % 4;
+        float randomInt = std::rand() % 6;
         float startingY = 752;
         float variationY = randomInt * 48;
         pEnemy->setPosition(sf::Vector2f(1000, startingY - variationY));
+        pEnemy->enemyMoveSpeed = enemyMoveSpeed;
 
         if (pEnemy->init())
             m_enemies.push_back(std::move(pEnemy));
+    }
+
+    // Enemy speed increase over time
+    speedIncreaseTimer -= dt;
+    if (speedIncreaseTimer <= 0.f) {
+        speedIncreaseTimer = speedIncreaseInterval;
+        if (enemyMoveSpeed < 720)
+            enemyMoveSpeed += 10;
+        if (enemySpawnInterval >= 0.70f)
+            enemySpawnInterval -= 0.02f;
     }
 
     // Shoot arrow with enter key

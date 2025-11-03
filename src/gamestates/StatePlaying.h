@@ -37,11 +37,17 @@ public:
 
     bool playerDied = false;
     bool scoreSaved = false;
+    
 
 private:
     // Set enemy spawn rate
-    static constexpr const float enemySpawnInterval = 1.5f;
+    float startingEnemySpawningInterval = 1.5f;
+    float enemySpawnInterval = startingEnemySpawningInterval;
     float m_timeUntilEnemySpawn = enemySpawnInterval;
+
+    // Enemy speed increase timer
+    static constexpr const float speedIncreaseInterval = 1.0f;
+    float speedIncreaseTimer = speedIncreaseInterval;
 
     // Set minimum time between arrow shots
     static constexpr const float arrowShootInterval = 0.2f;
@@ -53,6 +59,9 @@ private:
     std::vector<std::unique_ptr<Arrow>> m_arrows;
     sf::RectangleShape m_ground;
     bool m_hasPauseKeyBeenReleased = true;
+
+    float startingEnemyMoveSpeed = 300;
+    float enemyMoveSpeed = startingEnemyMoveSpeed;
 
     void updateCollisions();
 };

@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     // ResourceManager must be instantiated here -- DO NOT CHANGE
     ResourceManager::init(argv[0]);
 
-    sf::RenderWindow window(sf::VideoMode({1024, 1024}), "Runner");
+    sf::RenderWindow window(sf::VideoMode({1024, 1024}), "Tall Boyz Runner");
     window.setKeyRepeatEnabled(false);
 
     StateStack gamestates;

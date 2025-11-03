@@ -19,7 +19,7 @@ public:
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
 
-    float arrowMoveSpeed = 800;
+    float arrowMoveSpeed = 900;
     float startingX;
-    float arrowMaxDistance = 500;
+    float arrowMaxDistance = 600;
 };
