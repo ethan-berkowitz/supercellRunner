@@ -8,8 +8,7 @@
 
 namespace sf { class Sprite; }
 
-class Enemy final : public Entity
-{
+class Enemy final : public Entity {
 public:
     static constexpr float collisionRadius = 24.0f;
 

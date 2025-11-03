@@ -8,8 +8,7 @@ Player::Player()
 {
 }
 
-bool Player::init()
-{
+bool Player::init() {
     const sf::Texture* pTexture = ResourceManager::getOrLoadTexture("player.png");
     if (pTexture == nullptr)
         return false;
@@ -19,17 +18,12 @@ bool Player::init()
         return false;
 
     m_rotation = sf::degrees(0);
-    sf::FloatRect localBounds = m_pSprite->getLocalBounds();
-    m_pSprite->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
     m_pSprite->setPosition(m_position);
-    m_pSprite->setScale(sf::Vector2f(3.0f, 3.0f));
-    m_collisionRadius = collisionRadius;
 
     return true;
 }
 
-void Player::update(float dt)
-{
+void Player::update(float dt) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !m_isJumping) {
         m_isJumping = true;
         velocityY = jumpStrength;
@@ -46,8 +40,7 @@ void Player::update(float dt)
     }
 }
 
-void Player::render(sf::RenderTarget& target) const
-{
+void Player::render(sf::RenderTarget& target) const {
     m_pSprite->setRotation(m_rotation);
     m_pSprite->setPosition(m_position);
     target.draw(*m_pSprite);

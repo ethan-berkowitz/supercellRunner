@@ -22,7 +22,7 @@ bool StatePlaying::init()
     if (!m_pPlayer || !m_pPlayer->init())
         return false;
 
-    m_pPlayer->setPosition(sf::Vector2f(300, 776));
+    m_pPlayer->setPosition(sf::Vector2f(300, 752));
 
     return true;
 }
@@ -35,10 +35,12 @@ void StatePlaying::update(float dt)
         m_timeUntilEnemySpawn = enemySpawnInterval;
         std::unique_ptr<Enemy> pEnemy = std::make_unique<Enemy>();
         // Set spawn position of enemy
-        float randomInt = std::rand() % 5;
-        float startingY = 779;
-        float variationY = randomInt * 17;
+        float randomInt = std::rand() % 4;
+        float startingY = 752;
+        float variationY = randomInt * 48;
         pEnemy->setPosition(sf::Vector2f(1000, startingY - variationY));
+        //pEnemy->setPosition(sf::Vector2f(1000, startingY));
+
         if (pEnemy->init())
             m_enemies.push_back(std::move(pEnemy));
     }
@@ -61,12 +63,9 @@ void StatePlaying::update(float dt)
     bool playerDied = false;
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
     {
-        float distance = (m_pPlayer->getPosition() - pEnemy->getPosition()).lengthSquared();
-        float minDistance = std::pow(Player::collisionRadius + pEnemy->getCollisionRadius(), 2.0f);
-        const sf::Vector2f playerPosition = m_pPlayer->getPosition();
-
-        if (distance <= minDistance)
-        {
+        sf::FloatRect playerBounds = m_pPlayer->m_pSprite->getGlobalBounds();
+        sf::FloatRect enemyBounds = pEnemy->m_pSprite->getGlobalBounds();
+        if (const std::optional intersection = playerBounds.findIntersection(enemyBounds)) {
             playerDied = true;
             break;
         }
@@ -79,8 +78,9 @@ void StatePlaying::update(float dt)
 
 void StatePlaying::render(sf::RenderTarget& target) const
 {
-    target.draw(m_ground);
+    // Draw order
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
         pEnemy->render(target);
     m_pPlayer->render(target);
+    target.draw(m_ground);
 }

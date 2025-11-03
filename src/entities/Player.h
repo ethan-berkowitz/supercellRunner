@@ -24,5 +24,5 @@ public:
     float velocityY = 0.f;
     const float jumpStrength = -1100.f;
     const float gravity = 4000.f;
-    float startingY = 776;
+    float startingY = 752;
 };
