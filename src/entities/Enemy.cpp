@@ -25,7 +25,7 @@ bool Enemy::init()
 
 void Enemy::update(float dt)
 {
-    m_position.x -= 200 * dt;
+    m_position.x -= enemyMoveSpeed * dt;
 }
 
 void Enemy::render(sf::RenderTarget& target) const

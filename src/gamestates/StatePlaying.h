@@ -19,6 +19,7 @@ public:
     void render(sf::RenderTarget& target) const override;
 
 private:
+    // Set enemy spawn rate
     static constexpr const float enemySpawnInterval = 2.0f;
     float m_timeUntilEnemySpawn = enemySpawnInterval;
 

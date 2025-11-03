@@ -30,18 +30,20 @@ bool Player::init()
 
 void Player::update(float dt)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-    {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !m_isJumping) {
         m_isJumping = true;
+        velocityY = jumpStrength;
     }
+    if (m_isJumping) {
+        velocityY += gravity * dt;
+        m_position.y += velocityY * dt;
 
-    if (m_position.y < 600)
-        m_isJumping = false;
-
-    if (m_isJumping)
-        m_position.y -= 200 * dt;
-    else if (!m_isJumping && m_position.y < 800)
-        m_position.y += 200 * dt;
+        if (m_position.y >= startingY) {
+            m_position.y = startingY;
+            velocityY = 0;
+            m_isJumping = false;
+        }
+    }
 }
 
 void Player::render(sf::RenderTarget& target) const

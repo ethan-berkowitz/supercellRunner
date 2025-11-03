@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
         }
 
         pState->update(elapsedTime.asSeconds());
-        window.clear(sf::Color::Blue);
+        window.clear(sf::Color::Black);
         pState->render(window);
         window.display();
 

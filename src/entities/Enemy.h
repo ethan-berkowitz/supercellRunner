@@ -19,4 +19,7 @@ public:
     bool init() override;
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
+
+    float enemyMoveSpeed = 400;
+    float startingY;
 };
