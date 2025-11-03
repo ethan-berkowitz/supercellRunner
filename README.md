@@ -73,7 +73,7 @@ Press 'enter' to shoot
 
 Objective:
 Survive for as long as possible by jumping over enemies or shooting them in the head!
-
+Can you survive for 1 minute???
 
 ## Troubleshooting
 

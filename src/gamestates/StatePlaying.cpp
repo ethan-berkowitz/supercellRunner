@@ -100,6 +100,10 @@ void StatePlaying::update(float dt)
         return;
     }
 
+    // Enable clock when state is active
+    if (!scoreClock.isRunning())
+        scoreClock.start();
+
     // Enemy spawner
     m_timeUntilEnemySpawn -= dt;
     if (m_timeUntilEnemySpawn < 0.0f) {
@@ -148,6 +152,7 @@ void StatePlaying::update(float dt)
     m_hasPauseKeyBeenReleased |= !isPauseKeyPressed;
     if (m_hasPauseKeyBeenReleased && isPauseKeyPressed) {
         m_hasPauseKeyBeenReleased = false;
+        scoreClock.stop();
         m_stateStack.push<StatePaused>();
     }
 
