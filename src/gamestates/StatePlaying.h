@@ -26,18 +26,14 @@ public:
     std::unique_ptr<sf::Text> m_pText;
     std::unique_ptr<sf::Text> m_pRestartText;
     std::unique_ptr<sf::Text> m_pGameOverText;
-    std::unique_ptr<sf::Text> m_pHiScoreText;
     std::unique_ptr<sf::Text> m_pScoreText;
-    std::unique_ptr<sf::Text> m_pScore1Text;
-    std::unique_ptr<sf::Text> m_pScore2Text;
-    std::unique_ptr<sf::Text> m_pScore3Text;
-    std::unique_ptr<sf::Text> m_pScore4Text;
-    std::unique_ptr<sf::Text> m_pScore5Text;
 
     sf::Clock scoreClock;
 	sf::Time elapsed;
 
     std::vector<std::string> hiScores;
+
+    std::string lastScore;
 
     bool playerDied = false;
     bool scoreSaved = false;

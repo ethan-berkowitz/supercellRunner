@@ -28,48 +28,38 @@ bool StatePlaying::init()
     const sf::Font* pFont = ResourceManager::getOrLoadFont("Lavigne.ttf");
     if (pFont == nullptr)
         return false;
+
     // Clock text
     m_pText = std::make_unique<sf::Text>(*pFont);
     if (!m_pText)
         return false;
     m_pText->setStyle(sf::Text::Bold);
+
     // Restart text
     m_pRestartText = std::make_unique<sf::Text>(*pFont);
     if (!m_pRestartText)
         return false;
     m_pRestartText->setStyle(sf::Text::Bold);
     m_pRestartText->setString("PRESS <R> TO RESTART");
+    sf::FloatRect localBounds = m_pRestartText->getLocalBounds();
+    m_pRestartText->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
+    m_pRestartText->setPosition({512, 310});
+
     // Game Over Text
     m_pGameOverText = std::make_unique<sf::Text>(*pFont);
     if (!m_pRestartText)
         return false;
     m_pGameOverText->setStyle(sf::Text::Bold);
     m_pGameOverText->setString("GAME OVER");
-    // Hi Score title
-    m_pHiScoreText = std::make_unique<sf::Text>(*pFont);
-    if (!m_pRestartText)
-        return false;
-    m_pHiScoreText->setStyle(sf::Text::Bold);
-    m_pHiScoreText->setString("HI SCORES:");
-    // Score text TODO make into one text type with multiple lines
+    m_pGameOverText->setCharacterSize(64);
+    localBounds = m_pGameOverText->getLocalBounds();
+    m_pGameOverText->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
+    m_pGameOverText->setPosition({512, 250});
+
+    // Score text
     m_pScoreText = std::make_unique<sf::Text>(*pFont);
     if (!m_pRestartText) {return false;}
     m_pScoreText->setStyle(sf::Text::Bold);
-    // m_pScore1Text = std::make_unique<sf::Text>(*pFont);
-    // if (!m_pRestartText) {return false;}
-    // m_pScore1Text->setStyle(sf::Text::Bold);
-    // m_pScore2Text = std::make_unique<sf::Text>(*pFont);
-    // if (!m_pRestartText) {return false;}
-    // m_pScore2Text->setStyle(sf::Text::Bold);
-    // m_pScore3Text = std::make_unique<sf::Text>(*pFont);
-    // if (!m_pRestartText) {return false;}
-    // m_pScore3Text->setStyle(sf::Text::Bold);
-    // m_pScore4Text = std::make_unique<sf::Text>(*pFont);
-    // if (!m_pRestartText) {return false;}
-    // m_pScore4Text->setStyle(sf::Text::Bold);
-    // m_pScore5Text = std::make_unique<sf::Text>(*pFont);
-    // if (!m_pRestartText) {return false;}
-    // m_pScore5Text->setStyle(sf::Text::Bold);
 
     return true;
 }
@@ -90,7 +80,8 @@ void StatePlaying::update(float dt)
             ss << std::setfill('0') << std::setw(2) << minutes << ":"
                 << std::setfill('0') << std::setw(2) << seconds << ":"
                 << std::setfill('0') << std::setw(2) << milliseconds;
-            hiScores.push_back(ss.str());
+            lastScore = ss.str();
+            hiScores.push_back(lastScore);
             // Reorder HI SCORES
             std::sort(hiScores.begin(), hiScores.end(), std::greater<std::string>());
             scoreSaved = true;
@@ -214,6 +205,8 @@ void StatePlaying::update(float dt)
 
 void StatePlaying::render(sf::RenderTarget& target) const
 {
+    sf::Color goodYellow(255, 255, 153);
+
     // Draw order
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
         pEnemy->render(target);
@@ -226,17 +219,20 @@ void StatePlaying::render(sf::RenderTarget& target) const
     target.draw(*m_pText);
 
     if (playerDied) {
-        m_pRestartText->setPosition({300.f, 300.f});
         target.draw(*m_pRestartText);
-        m_pGameOverText->setPosition({300.f, 250.f});
         target.draw(*m_pGameOverText);
     }
 
     // Draw Hi Scores
+    m_pScoreText->setFillColor(sf::Color::White);
     m_pScoreText->setPosition({850, 12});
     m_pScoreText->setString("HI SCORES:");
     target.draw(*m_pScoreText);
     for (size_t i = 0; i < hiScores.size() && i < 5; i++) {
+        if (hiScores[i] == lastScore && playerDied)
+            m_pScoreText->setFillColor(goodYellow);
+        else
+            m_pScoreText->setFillColor(sf::Color::White);
         m_pScoreText->setPosition({850, 12 + static_cast<float>((i + 1) * 36)});
         m_pScoreText->setString(hiScores[i]);
         target.draw(*m_pScoreText);
