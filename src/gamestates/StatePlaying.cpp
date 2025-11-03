@@ -220,7 +220,6 @@ void StatePlaying::render(sf::RenderTarget& target) const
 {
     sf::Color goodYellow(255, 255, 153);
 
-    // Draw order
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies)
         pEnemy->render(target);
     for (const std::unique_ptr<Arrow>& pArrow : m_arrows)
@@ -234,6 +233,18 @@ void StatePlaying::render(sf::RenderTarget& target) const
     if (playerDied) {
         target.draw(*m_pRestartText);
         target.draw(*m_pGameOverText);
+    }
+
+    // Draw controls
+    int totalMs = static_cast<int>(elapsed.asMilliseconds());
+    if (totalMs < 3000) {
+        m_pScoreText->setFillColor(sf::Color::White);
+        m_pScoreText->setPosition({420, 300});
+        m_pScoreText->setString("JUMP - <space>");
+        target.draw(*m_pScoreText);
+        m_pScoreText->setPosition({420, 332});
+        m_pScoreText->setString("SHOOT - <enter>");
+        target.draw(*m_pScoreText);
     }
 
     // Draw Hi Scores

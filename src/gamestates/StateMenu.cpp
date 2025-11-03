@@ -22,7 +22,7 @@ bool StateMenu::init()
     if (!m_pText)
         return false;
 
-    m_pText->setString("PRESS <ENTER> TO PLAY");
+    
     m_pText->setStyle(sf::Text::Bold);
     sf::FloatRect localBounds = m_pText->getLocalBounds();
     m_pText->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
@@ -45,6 +45,18 @@ void StateMenu::update(float dt)
 
 void StateMenu::render(sf::RenderTarget& target) const
 {
+    m_pText->setFillColor(sf::Color::White);
+    m_pText->setString("PRESS <ENTER> TO PLAY");
+    sf::FloatRect localBounds = m_pText->getLocalBounds();
+    m_pText->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
     m_pText->setPosition({target.getSize().x * 0.5f, target.getSize().y * 0.5f});
+    target.draw(*m_pText);
+
+    sf::Color goodYellow(255, 255, 153);
+    m_pText->setFillColor(goodYellow);
+    m_pText->setString("TALL BOYZ RUNNER!");
+    localBounds = m_pText->getLocalBounds();
+    m_pText->setOrigin({localBounds.size.x / 2.0f, localBounds.size.y / 2.0f});
+    m_pText->setPosition({target.getSize().x * 0.5f, target.getSize().y * 0.5f - 100});
     target.draw(*m_pText);
 }
