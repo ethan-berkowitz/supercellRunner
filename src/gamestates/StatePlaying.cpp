@@ -24,6 +24,15 @@ bool StatePlaying::init()
 
     m_pPlayer->setPosition(sf::Vector2f(200, 752));
 
+    // Load font and create text
+    const sf::Font* pFont = ResourceManager::getOrLoadFont("Lavigne.ttf");
+    if (pFont == nullptr)
+        return false;
+    m_pText = std::make_unique<sf::Text>(*pFont);
+    if (!m_pText)
+        return false;
+    m_pText->setStyle(sf::Text::Bold);
+
     return true;
 }
 
@@ -72,13 +81,29 @@ void StatePlaying::update(float dt)
         pArrow->update(dt);
     }
 
+    // Show clock
+
+    elapsed = scoreClock.getElapsedTime();
+
+    int totalMs = static_cast<int>(elapsed.asMilliseconds());
+    int minutes = (totalMs / 1000) / 60;
+    int seconds = (totalMs / 1000) % 60;
+    int milliseconds = totalMs % 1000;
+
+    std::ostringstream ss;
+    ss << std::setfill('0') << std::setw(2) << minutes << ":"
+        << std::setfill('0') << std::setw(2) << seconds << ":"
+        << std::setfill('0') << std::setw(2) << milliseconds;
+
+    m_pText->setString(ss.str());
+
     // Detect player and enemy collisions
     bool playerDied = false;
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies) {
         sf::FloatRect playerBounds = m_pPlayer->m_pSprite->getGlobalBounds();
         sf::FloatRect enemyBounds = pEnemy->m_pSprite->getGlobalBounds();
         if (const std::optional intersection = playerBounds.findIntersection(enemyBounds)) {
-            //playerDied = true;
+            playerDied = true;
             break;
         }
     }
@@ -98,7 +123,7 @@ void StatePlaying::update(float dt)
 
     // Clean up entity vectors on death or offscreen
 
-    for (int i = 0; i < m_enemies.size();) {
+    for (size_t i = 0; i < m_enemies.size();) {
         if (m_enemies[i]->isHit || m_enemies[i]->getPosition().x < -48) {
             m_enemies.erase(m_enemies.begin() + i);
         }
@@ -107,7 +132,7 @@ void StatePlaying::update(float dt)
         }
     }
 
-    for (int i = 0; i < m_arrows.size();) {
+    for (size_t i = 0; i < m_arrows.size();) {
         if (m_arrows[i]->isHit
         || m_arrows[i]->getPosition().x > m_arrows[i]->startingX + m_arrows[i]->arrowMaxDistance) {
             m_arrows.erase(m_arrows.begin() + i);
@@ -131,4 +156,7 @@ void StatePlaying::render(sf::RenderTarget& target) const
         pArrow->render(target);
     m_pPlayer->render(target);
     target.draw(m_ground);
+
+    m_pText->setPosition({50.f, 50.f});
+    target.draw(*m_pText);
 }

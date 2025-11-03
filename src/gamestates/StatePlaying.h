@@ -8,6 +8,10 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Time.hpp>
+#include <sstream>
+
 
 class StatePlaying : public IState
 {
@@ -18,6 +22,11 @@ public:
     bool init() override;
     void update(float dt) override;
     void render(sf::RenderTarget& target) const override;
+
+    std::unique_ptr<sf::Text> m_pText;
+
+    sf::Clock scoreClock;
+	sf::Time elapsed;
 
 private:
     // Set enemy spawn rate
