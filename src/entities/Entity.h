@@ -29,6 +29,7 @@ public:
     std::unique_ptr<sf::Sprite> m_pSprite;
     bool isHit = false;
 
+
 protected:
     sf::Vector2f m_position;
     sf::Vector2f m_velocity;

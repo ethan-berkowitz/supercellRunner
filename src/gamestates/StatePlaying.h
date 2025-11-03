@@ -24,9 +24,14 @@ public:
     void render(sf::RenderTarget& target) const override;
 
     std::unique_ptr<sf::Text> m_pText;
+    std::unique_ptr<sf::Text> m_pRestartText;
+    std::unique_ptr<sf::Text> m_pGameOverText;
+
 
     sf::Clock scoreClock;
 	sf::Time elapsed;
+
+    bool playerDied = false;
 
 private:
     // Set enemy spawn rate

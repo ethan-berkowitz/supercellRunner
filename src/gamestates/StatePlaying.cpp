@@ -33,11 +33,38 @@ bool StatePlaying::init()
         return false;
     m_pText->setStyle(sf::Text::Bold);
 
+    m_pRestartText = std::make_unique<sf::Text>(*pFont);
+    if (!m_pRestartText)
+        return false;
+    m_pRestartText->setStyle(sf::Text::Bold);
+    m_pRestartText->setString("PRESS <R> TO RESTART");
+
+    m_pGameOverText = std::make_unique<sf::Text>(*pFont);
+    if (!m_pRestartText)
+        return false;
+    m_pGameOverText->setStyle(sf::Text::Bold);
+    m_pGameOverText->setString("GAME OVER");
+
+
     return true;
 }
 
 void StatePlaying::update(float dt)
 {
+    // Game Over and Restart
+    // TODO turn this it's own GameOver state!
+    if (playerDied) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::R)) {
+            //m_stateStack.popDeferred();
+            m_enemies.clear();
+            m_arrows.clear();
+            scoreClock.restart();
+            m_pPlayer->setPosition(sf::Vector2f(200, 752));
+            playerDied = false;
+        }
+        return;
+    }
+
     // Enemy spawner
     m_timeUntilEnemySpawn -= dt;
     if (m_timeUntilEnemySpawn < 0.0f) {
@@ -81,7 +108,7 @@ void StatePlaying::update(float dt)
         pArrow->update(dt);
     }
 
-    // Show clock
+    // Display clock
 
     elapsed = scoreClock.getElapsedTime();
 
@@ -98,7 +125,7 @@ void StatePlaying::update(float dt)
     m_pText->setString(ss.str());
 
     // Detect player and enemy collisions
-    bool playerDied = false;
+    
     for (const std::unique_ptr<Enemy>& pEnemy : m_enemies) {
         sf::FloatRect playerBounds = m_pPlayer->m_pSprite->getGlobalBounds();
         sf::FloatRect enemyBounds = pEnemy->m_pSprite->getGlobalBounds();
@@ -141,10 +168,6 @@ void StatePlaying::update(float dt)
             ++i;
         }
     }
-
-    // End Playing State on player death
-    if (playerDied)
-        m_stateStack.popDeferred();
 }
 
 void StatePlaying::render(sf::RenderTarget& target) const
@@ -159,4 +182,11 @@ void StatePlaying::render(sf::RenderTarget& target) const
 
     m_pText->setPosition({50.f, 50.f});
     target.draw(*m_pText);
+
+    if (playerDied) {
+        m_pRestartText->setPosition({300.f, 300.f});
+        target.draw(*m_pRestartText);
+        m_pGameOverText->setPosition({300.f, 250.f});
+        target.draw(*m_pGameOverText);
+    }
 }
